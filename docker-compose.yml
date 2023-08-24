@@ -1,0 +1,11 @@
+version: '3.8'
+services:
+  db:
+    image: postgres:latest
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: carbonable
+      POSTGRES_USER: carbonable
+      POSTGRES_DB: carbonable_carbon_credit_manager
+    ports:
+    - 15432:5432

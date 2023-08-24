@@ -1,0 +1,143 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model CarbonCredit {
+  id String @id
+
+  number        String
+  vintage       String             @db.VarChar(4)
+  type          CarbonCreditType
+  origin        CarbonCreditOrigin
+  purchasePrice BigInt?            @map("purchase_price")
+  isRetired     Boolean            @default(false) @map("is_retired")
+  isLocked      Boolean            @default(false) @map("is_locked")
+  isPurchased   Boolean            @default(false) @map("is_purchased")
+
+  auditStatus CarbonCreditAuditStatus @default(value: INITIAL) @map("audit_status")
+
+  project   Project @relation(fields: [projectId], references: [id])
+  projectId String  @map("project_id")
+
+  @@map("carbon_credits")
+}
+
+model Project {
+  id String @id
+
+  name             String
+  description      String
+  localization     String
+  startDate        String             @map("start_date") @db.VarChar(4)
+  endDate          String             @map("end_date") @db.VarChar(4)
+  area             Int                @map("area")
+  type             CarbonCreditType
+  origin           CarbonCreditOrigin
+  fundingAmount    BigInt             @map("funding_amount")
+  color            ProjectColor
+  protectedSpecies Int                @map("protected_species")
+  protectedForest  Int                @map("protected_forest")
+  allocation       Int
+
+  carbonCredits CarbonCredit[]
+  curvePoints   CurvePoint[]
+  certifier     Certifier?     @relation(fields: [certifierId], references: [id])
+  certifierId   String?        @map("certifier_id")
+  developper    Developper?    @relation(fields: [developperId], references: [id])
+  developperId  String?        @map("developper_id")
+  country       Country        @relation(fields: [countryId], references: [id])
+  countryId     String         @map("country_id")
+  ProjectsSdgs  ProjectsSdgs[]
+
+  @@map("projects")
+}
+
+model CurvePoint {
+  id         String   @id
+  time       DateTime @db.Timestamptz
+  absorption Float
+
+  project   Project @relation(fields: [projectId], references: id)
+  projectId String  @map("project_id")
+
+  @@map("curve_point")
+}
+
+model Certifier {
+  id   String @id
+  name String
+  slug String @unique
+
+  project Project[]
+
+  @@map("certifier")
+}
+
+model Developper {
+  id   String @id
+  name String
+  slug String @unique
+
+  projects Project[]
+
+  @@map("developper")
+}
+
+model Country {
+  id   String @id
+  name String
+  code String
+  data Json
+
+  projects Project[]
+
+  @@map("country")
+}
+
+model Sdg {
+  id           String         @id
+  number       Int
+  name         String
+  ProjectsSdgs ProjectsSdgs[]
+
+  @@map("sdg")
+}
+
+model ProjectsSdgs {
+  project   Project @relation(fields: [projectId], references: [id])
+  projectId String  @map("project_id")
+  sdg       Sdg     @relation(fields: [sdgId], references: [id])
+  sdgId     String  @map("sdg_id")
+
+  @@id([projectId, sdgId])
+  @@map("projects_sdgs")
+}
+
+enum CarbonCreditOrigin {
+  FORWARD_FINANCE
+  DIRECT_PURCHASE
+}
+
+enum CarbonCreditType {
+  RESTORATION
+  CONCERVATION
+}
+
+enum ProjectColor {
+  BLUE
+  ORANGE
+  GREEN
+}
+
+enum CarbonCreditAuditStatus {
+  INITIAL
+  AUDITED
+}
