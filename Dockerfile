@@ -26,4 +26,4 @@ COPY --chown=carbonable:carbonable --from=builder /srv/www/prisma ./prisma
 
 EXPOSE 8080
 
-ENTRYPOINT ["node_modules/.bin/pm2-runtime", "start", "dist/src/main.js", "--name", "carbon-credit-manager"]
+ENTRYPOINT ["node_modules/.bin/pm2-runtime", "start", "dist/src/main.js", "--name", "carbon-credit-purchase"]
