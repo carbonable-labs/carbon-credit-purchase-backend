@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { IUserService } from './user.interface';
-import { User } from '@prisma/client';
 import { PrismaService } from 'nestjs-prisma';
+import { User } from './entities/user.entity';
 
 @Injectable()
 export class UserService implements IUserService {
