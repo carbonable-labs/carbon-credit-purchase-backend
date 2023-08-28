@@ -10,6 +10,17 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  id            String   @id @default(uuid())
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  email         String   @unique
+  name          String
+  walletAddress String @map("wallet_address")
+
+  @@map("users")
+} 
+
 model CarbonCredit {
   id String @id
 
