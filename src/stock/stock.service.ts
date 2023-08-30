@@ -47,11 +47,29 @@ export class StockService implements IStockService {
   }
 
   async availableStock(): Promise<AvailableStockDto> {
-    const count = await this.prisma.carbonCredit.count({
+    // Get the total number of not retired carbon credits
+    const notRetired = await this.prisma.carbonCredit.count({
       where: {
         isRetired: false,
       },
     });
-    return { count };
+
+    // Get the total number of booked carbon credits
+    const booked = await this.prisma.order.groupBy({
+      by: ['status'],
+      where: {
+        NOT: {
+          status: 'CANCELLED',
+        },
+      },
+      _sum: {
+        amount: true,
+      },
+    });
+
+    const notCancelledOrders = booked[0]?._sum?.amount || 0;
+    const available = notRetired - notCancelledOrders;
+
+    return { available };
   }
 }

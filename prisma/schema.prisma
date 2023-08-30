@@ -17,9 +17,48 @@ model User {
   email         String   @unique
   name          String
   walletAddress String @map("wallet_address")
+  orders        Order[]
+  transactions  Transaction[]
 
   @@map("users")
-} 
+}
+
+model Order {
+  id  String @id @default(uuid())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  status    OrderStatus @default(value: PENDING)
+  amount    Int
+
+  user    User @relation(fields: [userId], references: [id])
+  userId  String @map("user_id")
+
+  transaction Transaction?
+
+  @@map("orders")
+}
+
+model Transaction {
+  id        String   @id @default(uuid())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  paymentProvider PaymentProvider @map("payment_provider")
+  externalId      String          @map("external_id")
+  amount          Float
+  currency        String
+
+  order   Order   @relation(fields: [orderId], references: [id])
+  orderId String  @unique @map("order_id")
+
+  user    User    @relation(fields: [userId], references: [id])
+  userId  String  @map("user_id")
+
+  @@map("transactions")
+}
 
 model CarbonCredit {
   id String @id
@@ -151,4 +190,16 @@ enum ProjectColor {
 enum CarbonCreditAuditStatus {
   INITIAL
   AUDITED
+}
+
+enum OrderStatus {
+  PENDING
+  BOOKED
+  CANCELLED
+  EXECUTED
+}
+
+enum PaymentProvider {
+  STRIPE
+  CRYPTO
 }

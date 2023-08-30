@@ -1,3 +1,3 @@
 export class AvailableStockDto {
-  count: number;
+  available: number;
 }

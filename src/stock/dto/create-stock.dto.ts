@@ -1,5 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
+import {
+  IsEnum,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
 export enum CarbonCreditType {
   RESTORATION = 'RESTORATION',
@@ -22,14 +28,14 @@ export class CreateStockDto {
   @IsString()
   vintage: string;
 
-  @ApiProperty()
+  @ApiProperty({ enum: CarbonCreditType })
   @IsNotEmpty()
-  @IsString()
+  @IsEnum(CarbonCreditType)
   type: CarbonCreditType;
 
-  @ApiProperty()
+  @ApiProperty({ enum: CarbonCreditOrigin })
   @IsNotEmpty()
-  @IsString()
+  @IsEnum(CarbonCreditOrigin)
   origin: CarbonCreditOrigin;
 
   @ApiProperty()

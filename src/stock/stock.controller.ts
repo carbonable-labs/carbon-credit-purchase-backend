@@ -87,6 +87,7 @@ export class StockController {
   @ApiNotFoundResponse({ description: 'Stock not found' })
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
   @ApiUnprocessableEntityResponse({ description: 'Bad Request' })
+  @UsePipes(new ValidationPipe())
   @Patch(':id')
   update(
     @Param('id') id: string,

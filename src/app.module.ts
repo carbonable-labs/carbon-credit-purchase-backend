@@ -8,6 +8,7 @@ import {
 } from 'nestjs-prisma';
 import { StockModule } from './stock/stock.module';
 import { ProjectModule } from './project/project.module';
+import { OrderModule } from './order/order.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { ProjectModule } from './project/project.module';
     UsersModule,
     StockModule,
     ProjectModule,
+    OrderModule,
   ],
   controllers: [AppController],
   providers: [providePrismaClientExceptionFilter(), AppService],
