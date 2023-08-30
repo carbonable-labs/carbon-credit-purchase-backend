@@ -8,6 +8,8 @@ import {
   Delete,
   Inject,
   HttpException,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 import { IUserService, USER_SERVICE } from './user.interface';
 import {
@@ -22,8 +24,9 @@ import {
 import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './entities/user.entity';
 import { UpdateUserDto } from './dto/update-user.dto';
-@ApiTags('users')
-@Controller('users')
+
+@ApiTags('user')
+@Controller('user')
 export class UserController {
   constructor(
     @Inject(USER_SERVICE)
@@ -32,24 +35,25 @@ export class UserController {
 
   @ApiOperation({ summary: 'Create a new user' })
   @ApiCreatedResponse({
-    type: CreateUserDto,
+    type: User,
     description: 'The user has been successfully created.',
   })
   @ApiUnprocessableEntityResponse({ description: 'Bad Request' })
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
+  @UsePipes(new ValidationPipe())
   @Post()
-  async create(@Body() user: CreateUserDto): Promise<CreateUserDto> {
+  async create(@Body() user: CreateUserDto): Promise<User> {
     return await this._usersService.create(user);
   }
 
   @ApiOperation({ summary: 'Get all users' })
   @ApiOkResponse({ description: 'Return all users.' })
   @Get()
-  async findAll(): Promise<User[]> {
-    return await this._usersService.findAll();
+  findAll(): Promise<User[]> {
+    return this._usersService.findAll();
   }
 
-  @ApiOperation({ summary: 'Get a users with its id' })
+  @ApiOperation({ summary: 'Get a user with its id' })
   @ApiOkResponse({
     description: 'Return a specific user based on its id',
     type: User,
@@ -60,10 +64,6 @@ export class UserController {
   async findOne(@Param('id') id: string): Promise<User> {
     const user = await this._usersService.findOne(id);
 
-    if (!user) {
-      throw new HttpException('User not found', 404);
-    }
-
     return user;
   }
 
@@ -72,10 +72,7 @@ export class UserController {
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
   @ApiUnprocessableEntityResponse({ description: 'Bad Request' })
   @Patch(':id')
-  update(
-    @Param('id') id: string,
-    @Body() user: UpdateUserDto,
-  ): Promise<UpdateUserDto> {
+  update(@Param('id') id: string, @Body() user: UpdateUserDto): Promise<User> {
     return this._usersService.update(id, user);
   }
 

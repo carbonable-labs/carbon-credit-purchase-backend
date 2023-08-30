@@ -6,9 +6,16 @@ import {
   PrismaModule,
   providePrismaClientExceptionFilter,
 } from 'nestjs-prisma';
+import { StockModule } from './stock/stock.module';
+import { ProjectModule } from './project/project.module';
 
 @Module({
-  imports: [PrismaModule.forRoot({ isGlobal: true }), UsersModule],
+  imports: [
+    PrismaModule.forRoot({ isGlobal: true }),
+    UsersModule,
+    StockModule,
+    ProjectModule,
+  ],
   controllers: [AppController],
   providers: [providePrismaClientExceptionFilter(), AppService],
 })

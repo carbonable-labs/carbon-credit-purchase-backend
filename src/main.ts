@@ -26,6 +26,11 @@ async function bootstrap() {
     }),
   );
 
+  // Workaround to allow BigInt to be serialized as JSON
+  (BigInt.prototype as any).toJSON = function () {
+    return this.toString();
+  };
+
   await app.listen(3000);
 }
 bootstrap();
