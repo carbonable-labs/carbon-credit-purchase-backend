@@ -12,4 +12,8 @@ export interface IStockService {
   update(id: string, stock: UpdateStockDto): Promise<Stock>;
   remove(id: string): Promise<string>;
   availableStock(): Promise<AvailableStockDto>;
+  getExPostStock(): Promise<Stock[]>;
+  getExAnteStock(): Promise<Stock[]>;
+  getExPostStockCount(): Promise<number>;
+  getExAnteStockCount(): Promise<number>;
 }

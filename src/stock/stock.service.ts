@@ -72,4 +72,60 @@ export class StockService implements IStockService {
 
     return { available };
   }
+
+  getExPostStock(): Promise<Stock[]> {
+    const currentYear = new Date().getFullYear();
+    return this.prisma.carbonCredit.findMany({
+      where: {
+        isRetired: false,
+        vintage: {
+          lte: currentYear.toString(),
+        },
+        auditStatus: 'AUDITED',
+      },
+    });
+  }
+
+  getExAnteStock(): Promise<Stock[]> {
+    const currentYear = new Date().getFullYear();
+    return this.prisma.carbonCredit.findMany({
+      where: {
+        isRetired: false,
+        vintage: {
+          gt: currentYear.toString(),
+        },
+        NOT: {
+          auditStatus: 'AUDITED',
+        },
+      },
+    });
+  }
+
+  getExPostStockCount(): Promise<number> {
+    const currentYear = new Date().getFullYear();
+    return this.prisma.carbonCredit.count({
+      where: {
+        isRetired: false,
+        vintage: {
+          lte: currentYear.toString(),
+        },
+        auditStatus: 'AUDITED',
+      },
+    });
+  }
+
+  getExAnteStockCount(): Promise<number> {
+    const currentYear = new Date().getFullYear();
+    return this.prisma.carbonCredit.count({
+      where: {
+        isRetired: false,
+        vintage: {
+          gte: currentYear.toString(),
+        },
+        NOT: {
+          auditStatus: 'AUDITED',
+        },
+      },
+    });
+  }
 }

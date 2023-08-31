@@ -9,6 +9,7 @@ import {
 import { StockModule } from './stock/stock.module';
 import { ProjectModule } from './project/project.module';
 import { OrderModule } from './order/order.module';
+import { TransactionModule } from './transaction/transaction.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { OrderModule } from './order/order.module';
     StockModule,
     ProjectModule,
     OrderModule,
+    TransactionModule,
   ],
   controllers: [AppController],
   providers: [providePrismaClientExceptionFilter(), AppService],

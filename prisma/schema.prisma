@@ -72,7 +72,7 @@ model CarbonCredit {
   isLocked      Boolean            @default(false) @map("is_locked")
   isPurchased   Boolean            @default(false) @map("is_purchased")
 
-  auditStatus CarbonCreditAuditStatus @default(value: INITIAL) @map("audit_status")
+  auditStatus CarbonCreditAuditStatus @default(value: PROJECTED) @map("audit_status")
 
   project   Project @relation(fields: [projectId], references: [id])
   projectId String  @map("project_id")
@@ -188,7 +188,8 @@ enum ProjectColor {
 }
 
 enum CarbonCreditAuditStatus {
-  INITIAL
+  PROJECTED
+  CONFIRMED
   AUDITED
 }
 

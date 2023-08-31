@@ -43,6 +43,46 @@ export class StockController {
     return availableStock;
   }
 
+  @ApiOperation({ summary: 'Get ex-post carbon credit stock' })
+  @ApiOkResponse({
+    description: 'Return ex-post carbon credit stock list',
+  })
+  @Get('ex-post-list')
+  getExPostStock(): Promise<Stock[]> {
+    const exPostStock = this._stockService.getExPostStock();
+    return exPostStock;
+  }
+
+  @ApiOperation({ summary: 'Get ex-ante carbon credit stock' })
+  @ApiOkResponse({
+    description: 'Return ex-ante carbon credit stock list',
+  })
+  @Get('ex-ante-list')
+  getExAnteStock(): Promise<Stock[]> {
+    const exAnteStock = this._stockService.getExAnteStock();
+    return exAnteStock;
+  }
+
+  @ApiOperation({ summary: 'Get ex-post carbon credit stock count' })
+  @ApiOkResponse({
+    description: 'Return ex-post carbon credit stock count',
+  })
+  @Get('ex-post-count')
+  getExPostStockCount(): Promise<number> {
+    const exPostStockCount = this._stockService.getExPostStockCount();
+    return exPostStockCount;
+  }
+
+  @ApiOperation({ summary: 'Get ex-ante carbon credit stock count' })
+  @ApiOkResponse({
+    description: 'Return ex-ante carbon credit stock count',
+  })
+  @Get('ex-ante-count')
+  getExAnteStockCount(): Promise<number> {
+    const exAnteStockCount = this._stockService.getExAnteStockCount();
+    return exAnteStockCount;
+  }
+
   @ApiOperation({ summary: 'Create a new carbon credit stock for a project' })
   @ApiCreatedResponse({
     type: Stock,
@@ -78,7 +118,6 @@ export class StockController {
   @Get(':id')
   async findOne(@Param('id') id: string): Promise<Stock> {
     const stock = await this._stockService.findOne(id);
-    console.log(stock);
     return stock;
   }
 
