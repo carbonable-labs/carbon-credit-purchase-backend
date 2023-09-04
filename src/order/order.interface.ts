@@ -9,4 +9,6 @@ export interface IOrderService {
   findOne(id: string): Promise<Order>;
   create(userId: string, order: CreateOrderDto): Promise<Order>;
   update(id: string, order: UpdateOrderDto): Promise<Order>;
+  sumOngoingOrders(): Promise<number>;
+  findBookedOrders(): Promise<Order[]>;
 }

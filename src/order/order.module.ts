@@ -11,5 +11,6 @@ import { ORDER_SERVICE } from './order.interface';
       useClass: OrderService,
     },
   ],
+  exports: [ORDER_SERVICE],
 })
 export class OrderModule {}

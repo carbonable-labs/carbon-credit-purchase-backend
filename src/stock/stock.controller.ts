@@ -43,6 +43,19 @@ export class StockController {
     return availableStock;
   }
 
+  @ApiOperation({ summary: 'Get year of next available carbon credit stock' })
+  @ApiOkResponse({
+    description: 'Return year of next available carbon credit stock',
+  })
+  @Get('next-available/:ccNeeded')
+  getYearOfNextAvailableStock(
+    @Param('ccNeeded') ccNeeded: string,
+  ): Promise<string> {
+    const yearOfNextAvailableStock =
+      this._stockService.getYearOfNextAvailableStock(parseInt(ccNeeded));
+    return yearOfNextAvailableStock;
+  }
+
   @ApiOperation({ summary: 'Get ex-post carbon credit stock' })
   @ApiOkResponse({
     description: 'Return ex-post carbon credit stock list',

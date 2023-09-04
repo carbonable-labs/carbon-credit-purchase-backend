@@ -32,4 +32,28 @@ export class OrderService implements IOrderService {
   update(id: string, updateOrderDto: UpdateOrderDto): Promise<Order> {
     return this.prisma.order.update({ where: { id }, data: updateOrderDto });
   }
+
+  async sumOngoingOrders(): Promise<number> {
+    const result = await this.prisma.order.aggregate({
+      _sum: {
+        amount: true,
+      },
+      where: {
+        OR: [{ status: 'PENDING' }, { status: 'BOOKED' }],
+      },
+    });
+
+    return result._sum.amount;
+  }
+
+  async findBookedOrders(): Promise<Order[]> {
+    return this.prisma.order.findMany({
+      where: {
+        status: 'BOOKED',
+      },
+      orderBy: {
+        createdAt: 'asc',
+      },
+    });
+  }
 }

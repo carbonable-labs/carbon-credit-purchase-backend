@@ -10,15 +10,19 @@ import { StockModule } from './stock/stock.module';
 import { ProjectModule } from './project/project.module';
 import { OrderModule } from './order/order.module';
 import { TransactionModule } from './transaction/transaction.module';
+import { ScheduleModule } from '@nestjs/schedule';
+import { CronjobsModule } from './cronjobs/cronjobs.module';
 
 @Module({
   imports: [
     PrismaModule.forRoot({ isGlobal: true }),
+    ScheduleModule.forRoot(),
     UsersModule,
     StockModule,
     ProjectModule,
     OrderModule,
     TransactionModule,
+    CronjobsModule,
   ],
   controllers: [AppController],
   providers: [providePrismaClientExceptionFilter(), AppService],
