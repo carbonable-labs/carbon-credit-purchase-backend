@@ -43,5 +43,4 @@ Check API documentation at [http://localhost:3000/api](http://localhost:3000/api
 
 ## License
 
-  [Apache 2.0 licensed](LICENSE).
-```
+[Apache 2.0 licensed](LICENSE).
