@@ -11,4 +11,5 @@ export interface IOrderService {
   update(id: string, order: UpdateOrderDto): Promise<Order>;
   sumOngoingOrders(): Promise<number>;
   findBookedOrders(): Promise<Order[]>;
+  cancelOrders(): Promise<number>;
 }

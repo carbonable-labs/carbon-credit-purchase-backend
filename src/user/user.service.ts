@@ -18,7 +18,15 @@ export class UserService implements IUserService {
   }
 
   findOne(id: string): Promise<User> {
-    return this.prisma.user.findUniqueOrThrow({ where: { id } });
+    return this.prisma.user.findFirstOrThrow({
+      where: {
+        OR: [{ id }, { email: id }],
+      },
+    });
+  }
+
+  findOneByEmail(email: string): Promise<User> {
+    return this.prisma.user.findUniqueOrThrow({ where: { email } });
   }
 
   update(id: string, user: UpdateUserDto): Promise<User> {

@@ -3,11 +3,11 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
   Inject,
   UsePipes,
   ValidationPipe,
+  Put,
 } from '@nestjs/common';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
@@ -44,6 +44,7 @@ export class OrderController {
     @Param('userId') userId: string,
     @Body() createOrderDto: CreateOrderDto,
   ) {
+    console.log('createOrderDto', createOrderDto);
     return this._orderService.create(userId, createOrderDto);
   }
 
@@ -74,7 +75,7 @@ export class OrderController {
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
   @ApiUnprocessableEntityResponse({ description: 'Bad Request' })
   @UsePipes(new ValidationPipe())
-  @Patch(':id')
+  @Put(':id')
   update(@Param('id') id: string, @Body() updateOrderDto: UpdateOrderDto) {
     return this._orderService.update(id, updateOrderDto);
   }

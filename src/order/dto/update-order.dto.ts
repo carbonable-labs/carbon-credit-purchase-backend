@@ -1,6 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { OrderStatus } from './create-order.dto';
 import { IsEnum, IsNotEmpty } from 'class-validator';
+
+export enum OrderStatus {
+  PENDING = 'PENDING',
+  CANCELLED = 'CANCELLED',
+  BOOKED = 'BOOKED',
+  EXECUTED = 'EXECUTED',
+}
 
 export class UpdateOrderDto {
   @ApiProperty({ enum: OrderStatus })

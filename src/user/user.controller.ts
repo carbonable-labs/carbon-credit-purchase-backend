@@ -32,6 +32,20 @@ export class UserController {
     private readonly _usersService: IUserService,
   ) {}
 
+  @ApiOperation({ summary: 'Get a user with its email' })
+  @ApiOkResponse({
+    description: 'Return a specific user based on its email',
+    type: User,
+  })
+  @ApiForbiddenResponse({ description: 'Unauthorized Request' })
+  @ApiNotFoundResponse({ description: 'User not found' })
+  @Get('email/:email')
+  async findByEmail(@Param('email') email: string): Promise<User> {
+    const user = await this._usersService.findOneByEmail(email);
+
+    return user;
+  }
+
   @ApiOperation({ summary: 'Create a new user' })
   @ApiCreatedResponse({
     type: User,
@@ -52,9 +66,9 @@ export class UserController {
     return this._usersService.findAll();
   }
 
-  @ApiOperation({ summary: 'Get a user with its id' })
+  @ApiOperation({ summary: 'Get a user with its id or its email' })
   @ApiOkResponse({
-    description: 'Return a specific user based on its id',
+    description: 'Return a specific user based on its id or its email',
     type: User,
   })
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })

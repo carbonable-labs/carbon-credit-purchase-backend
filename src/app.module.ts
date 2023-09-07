@@ -12,6 +12,7 @@ import { OrderModule } from './order/order.module';
 import { TransactionModule } from './transaction/transaction.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { CronjobsModule } from './cronjobs/cronjobs.module';
+import { PriceModule } from './price/price.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { CronjobsModule } from './cronjobs/cronjobs.module';
     StockModule,
     ProjectModule,
     OrderModule,
+    PriceModule,
     TransactionModule,
     CronjobsModule,
   ],

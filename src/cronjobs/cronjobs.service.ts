@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
-import { OrderStatus } from 'src/order/dto/create-order.dto';
+import { OrderStatus } from 'src/order/dto/update-order.dto';
 import { IOrderService, ORDER_SERVICE } from 'src/order/order.interface';
 import { IStockService, STOCK_SERVICE } from 'src/stock/stock.interface';
 
@@ -44,5 +44,16 @@ export class CronjobsService {
 
       // TODO: Generate certificate
     }
+  }
+
+  // TODO: Add cronjob to canceled unpaid orders
+  @Cron(CronExpression.EVERY_5_SECONDS)
+  async executeCanceledOrders() {
+    console.log('Execute canceled orders');
+
+    // Retrieve canceled orders
+    const orders = await this._orderService.cancelOrders();
+
+    console.log(`Found ${orders} orders to cancel`);
   }
 }

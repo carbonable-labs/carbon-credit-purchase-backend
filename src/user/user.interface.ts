@@ -7,6 +7,7 @@ export const USER_SERVICE = 'USER SERVICE';
 export interface IUserService {
   findAll(): Promise<User[]>;
   findOne(id: string): Promise<User>;
+  findOneByEmail(email: string): Promise<User>;
   create(user: CreateUserDto): Promise<User>;
   update(id: string, user: UpdateUserDto): Promise<User>;
   remove(id: string): Promise<string>;

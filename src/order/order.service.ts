@@ -4,6 +4,7 @@ import { UpdateOrderDto } from './dto/update-order.dto';
 import { PrismaService } from 'nestjs-prisma';
 import { Order } from './entities/order.entity';
 import { IOrderService } from './order.interface';
+import { OrderStatus } from '@prisma/client';
 
 @Injectable()
 export class OrderService implements IOrderService {
@@ -55,5 +56,22 @@ export class OrderService implements IOrderService {
         createdAt: 'asc',
       },
     });
+  }
+
+  // Cancel pending orders created more than 5 minutes ago
+  async cancelOrders(): Promise<number> {
+    const result = await this.prisma.order.updateMany({
+      data: {
+        status: OrderStatus.CANCELLED,
+      },
+      where: {
+        status: 'PENDING',
+        createdAt: {
+          lte: new Date(Date.now() - 5 * 60 * 1000),
+        },
+      },
+    });
+
+    return result.count;
   }
 }

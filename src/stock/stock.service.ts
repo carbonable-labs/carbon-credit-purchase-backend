@@ -174,11 +174,6 @@ export class StockService implements IStockService {
     }
 
     const sumOngoingOrders = await this._orderService.sumOngoingOrders();
-    const availableCC = available - sumOngoingOrders;
-
-    if (availableCC < neededCC) {
-      throw new NotFoundException('Not enough stock available');
-    }
 
     const targetYear = await this.prisma.carbonCredit.findFirst({
       skip: sumOngoingOrders + neededCC - 1,
