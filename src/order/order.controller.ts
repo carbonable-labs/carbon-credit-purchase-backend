@@ -44,7 +44,6 @@ export class OrderController {
     @Param('userId') userId: string,
     @Body() createOrderDto: CreateOrderDto,
   ) {
-    console.log('createOrderDto', createOrderDto);
     return this._orderService.create(userId, createOrderDto);
   }
 
