@@ -1,8 +1,12 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
-import { OrderStatus } from 'src/order/dto/update-order.dto';
-import { IOrderService, ORDER_SERVICE } from 'src/order/order.interface';
-import { IStockService, STOCK_SERVICE } from 'src/stock/stock.interface';
+import { IOrderService, ORDER_SERVICE } from '../../src/order/order.interface';
+import { IStockService, STOCK_SERVICE } from '../../src/stock/stock.interface';
+import {
+  ICertificateService,
+  CERTIFICATE_SERVICE,
+} from '../../src/certificate/certificate.interface';
+import { OrderStatus } from '../../src/order/dto/update-order.dto';
 
 @Injectable()
 export class CronjobsService {
@@ -11,6 +15,8 @@ export class CronjobsService {
     private readonly _orderService: IOrderService,
     @Inject(STOCK_SERVICE)
     private readonly _stockService: IStockService,
+    @Inject(CERTIFICATE_SERVICE)
+    private readonly _certificateService: ICertificateService,
   ) {}
 
   @Cron(CronExpression.EVERY_5_SECONDS)
@@ -42,7 +48,13 @@ export class CronjobsService {
         status: OrderStatus.EXECUTED,
       });
 
-      // TODO: Generate certificate
+      // TODO: Call minting service
+      const mintingTx = await this._certificateService.mint(order.id);
+      console.log(`Minting transaction: ${mintingTx}`);
+
+      // TODO: Call metadata service
+
+      // TODO: Generate certificate with metadata
     }
   }
 

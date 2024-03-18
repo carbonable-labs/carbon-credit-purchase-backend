@@ -13,6 +13,7 @@ import { TransactionModule } from './transaction/transaction.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { CronjobsModule } from './cronjobs/cronjobs.module';
 import { PriceModule } from './price/price.module';
+import { CertificateModule } from './certificate/certificate.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { PriceModule } from './price/price.module';
     OrderModule,
     PriceModule,
     TransactionModule,
+    CertificateModule,
     CronjobsModule,
   ],
   controllers: [AppController],
