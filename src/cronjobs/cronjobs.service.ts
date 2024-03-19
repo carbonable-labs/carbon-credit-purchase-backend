@@ -48,17 +48,20 @@ export class CronjobsService {
         status: OrderStatus.EXECUTED,
       });
 
-      // TODO: Call minting service
+      // Call minting service
       const mintingTx = await this._certificateService.mint(order.id);
-      console.log(`Minting transaction: ${mintingTx}`);
 
-      // TODO: Call metadata service
+      // Call metadata service
+      const metadata =
+        await this._certificateService.retrieveMetadata(mintingTx);
 
-      // TODO: Generate certificate with metadata
+      // Generate certificate with metadata
+      await this._certificateService.generateCertificate(metadata);
+
+      // TODO: Send email to user
     }
   }
 
-  // TODO: Add cronjob to canceled unpaid orders
   @Cron(CronExpression.EVERY_5_SECONDS)
   async executeCanceledOrders() {
     console.log('Execute canceled orders');
