@@ -66,7 +66,7 @@ export class CertificateService {
       entrypoint: 'mint',
       calldata: call.calldata,
     });
-    console.log('reponse:', res);
+
     await this.provider.waitForTransaction(res.transaction_hash);
 
     return res.transaction_hash;
