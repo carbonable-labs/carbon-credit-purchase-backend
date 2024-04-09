@@ -11,5 +11,6 @@ import { PRICE_SERVICE } from './price.interface';
       useClass: PriceService,
     },
   ],
+  exports: [PRICE_SERVICE],
 })
-export class PriceModule {}
+export class PriceModule { }
