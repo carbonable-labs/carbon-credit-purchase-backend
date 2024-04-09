@@ -3,6 +3,7 @@ import { StockService } from './stock.service';
 import { StockController } from './stock.controller';
 import { STOCK_SERVICE } from './stock.interface';
 import { OrderModule } from 'src/order/order.module';
+import { PriceModule } from 'src/price/price.module';
 
 @Module({
   controllers: [StockController],
@@ -12,7 +13,7 @@ import { OrderModule } from 'src/order/order.module';
       useClass: StockService,
     },
   ],
-  imports: [OrderModule],
+  imports: [OrderModule, PriceModule],
   exports: [STOCK_SERVICE],
 })
-export class StockModule {}
+export class StockModule { }
