@@ -8,14 +8,56 @@ import { monotonicFactory } from 'ulid';
 import { AvailableStockDto } from './dto/available-stock.dto';
 import { RetireStockDto } from './dto/retire-stock.dto';
 import { IOrderService, ORDER_SERVICE } from 'src/order/order.interface';
+import { Account, Contract, RpcProvider, num } from 'starknet';
+import { IPriceService, PRICE_SERVICE } from 'src/price/price.interface';
 
 @Injectable()
 export class StockService implements IStockService {
+  private ccContract: Contract;
+  private account: Account;
+  private provider: RpcProvider;
+  private walletAddress: string;
+  private carbonCreditAddress: string;
+
   constructor(
     private prisma: PrismaService,
     @Inject(ORDER_SERVICE)
     private readonly _orderService: IOrderService,
-  ) {}
+    @Inject(PRICE_SERVICE)
+    private readonly _priceService: IPriceService,
+  ) {
+    this.setup();
+  }
+  async setup(): Promise<void> {
+    const walletAddress = process.env.ARGENT_WALLET_ADDRESS;
+    const carbonCreditAddress = process.env.CARBON_CREDIT_ADDRESS;
+
+    const provider = new RpcProvider({
+      nodeUrl: `${process.env.NODE_URL}?apikey=${process.env.RPC_API_KEY}`,
+    });
+
+    const account = new Account(
+      provider,
+      walletAddress,
+      process.env.ARGENT_WALLET_PK,
+    );
+
+    const { abi: ccAbi } = await provider.getClassAt(carbonCreditAddress);
+
+    if (ccAbi === undefined) {
+      throw new Error('no abi.');
+    }
+
+    const ccContract = new Contract(ccAbi, carbonCreditAddress, provider);
+
+    ccContract.connect(account);
+
+    this.ccContract = ccContract;
+    this.account = account;
+    this.provider = provider;
+    this.walletAddress = walletAddress;
+    this.carbonCreditAddress = carbonCreditAddress;
+  }
 
   create(projectId: string, createStockDto: CreateStockDto): Promise<Stock> {
     const ulid = monotonicFactory();
@@ -34,6 +76,36 @@ export class StockService implements IStockService {
 
   findAll(): Promise<Stock[]> {
     return this.prisma.carbonCredit.findMany();
+  }
+
+  async findAllWeb3(): Promise<Stock[]> {
+    let stock: Stock[] = [];
+    const tokenIds = [1, 2, 3];
+    let balances = await this.ccContract.call('balance_of_batch', [[this.account.address, this.account.address, this.account.address], tokenIds]);
+    let name = await this.ccContract.call('name', []);
+    let start_time = await this.ccContract.call('get_start_time', []);
+    let price = this._priceService.getCurrentPrice();
+    let year = new Date(parseInt(start_time.toString()) * 1_000).getFullYear();
+    console.log(year);
+    console.log(start_time.toString());
+
+    (balances as Array<BigInt>).forEach((balance, index) => {
+      stock.push({
+        id: tokenIds[index].toString(),
+        number: balance.toString(),
+        vintage: (year + index).toString(),
+        type: 'blue',
+        origin: name.toString(),
+        purchasePrice: num.toBigInt(price * 1_000_000),
+        isRetired: false,
+        isLocked: false,
+        isPurchased: false,
+        auditStatus: 'projected',
+        projectId: 'Manjarisoa',
+      });
+    });
+
+    return stock
   }
 
   findOne(id: string): Promise<Stock> {
