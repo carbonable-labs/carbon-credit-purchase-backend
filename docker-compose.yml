@@ -8,4 +8,4 @@ services:
       POSTGRES_USER: carbonable
       POSTGRES_DB: carbonable_carbon_credit_purchase
     ports:
-    - 15432:5432
+      - 15432:5432
