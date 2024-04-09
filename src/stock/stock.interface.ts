@@ -8,6 +8,7 @@ export const STOCK_SERVICE = 'STOCK SERVICE';
 
 export interface IStockService {
   findAll(): Promise<Stock[]>;
+  findAllWeb3(): Promise<Stock[]>;
   findOne(id: string): Promise<Stock>;
   create(projectId: string, stock: CreateStockDto): Promise<Stock>;
   update(id: string, stock: UpdateStockDto): Promise<Stock>;

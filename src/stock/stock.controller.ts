@@ -31,7 +31,7 @@ export class StockController {
   constructor(
     @Inject(STOCK_SERVICE)
     private readonly _stockService: IStockService,
-  ) {}
+  ) { }
 
   @ApiOperation({ summary: 'Get available carbon credit stock' })
   @ApiOkResponse({
@@ -119,6 +119,15 @@ export class StockController {
   @Get()
   findAll(): Promise<Stock[]> {
     return this._stockService.findAll();
+  }
+
+  @ApiOperation({ summary: 'Get all carbon credit stock' })
+  @ApiOkResponse({
+    description: 'Return all on-chain carbon credit stock available or not.',
+  })
+  @Get('findAllWeb3')
+  findAllWeb3(): Promise<Stock[]> {
+    return this._stockService.findAllWeb3();
   }
 
   @ApiOperation({ summary: 'Get a carbon credit stock with its id' })
